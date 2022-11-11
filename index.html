@@ -8,6 +8,7 @@
 
     <!-- need to npm install install amazon-cognito-identity-js-node to import the module -->
     <script src="./src/dist/amazon-cognito-identity.min.js"></script>
+    <script src="./config.js"></script>
     <style>
       body {
         width: 300px;
@@ -41,8 +42,8 @@
 
       //userpool
       let userpooldata = {
-        UserPoolId: 'us-east-1_vTyEjGP0j',
-        ClientId: '4s7073mfvj4t7m52o113u9pllu',
+        UserPoolId: _config.cognito.UserPoolId,
+        ClientId: _config.cognito.ClientId,
       };
 
       var userpool = new AmazonCognitoIdentity.CognitoUserPool(userpooldata);
