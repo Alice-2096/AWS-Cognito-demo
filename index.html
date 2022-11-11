@@ -56,7 +56,7 @@
       var emailAtt = new AmazonCognitoIdentity.CognitoUserAttribute(emaildata);
 
       //sign up new user
-      userpool.signUp(email, password, [emailAtt], null, (err, result) => {
+      userpool.signUp(username, password, [emailAtt], null, (err, result) => {
         if (!err) {
           alert('success!');
         } else {
