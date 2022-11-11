@@ -18,6 +18,12 @@
         display: flex;
         flex-direction: column;
       }
+      .form2 {
+        display: none;
+      }
+      .form2.enter {
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -31,8 +37,19 @@
       <input id="password" type="text" />
       <button id="btn">Submit</button>
     </form>
+
+    <form class="form2" action="">
+      enter username here:
+      <input type="text" name="" id="username2" />
+      enter code here:
+      <input type="text" id="code" />
+      <button>Submit Code</button>
+    </form>
+
+    <button id="verify">Verify</button>
   </body>
   <script>
+    const form2 = document.querySelector('.form2');
     const form = document.getElementById('forma');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -58,14 +75,36 @@
       //signing up by using a username, password, attribute list, and validation data.
       userpool.signUp(username, password, [emailAtt], null, (err, result) => {
         if (!err) {
-          alert('success!');
+          alert('success! please enter your verification code below');
+          //verification
+          form2.classList.add('enter');
         } else {
           console.log(err);
         }
       });
-
-      //clear form
-      form.reset();
     });
+
+    const ver = document.getElementById('verify');
+    ver.addEventListener('click', (e) => {
+      form2.classList.toggle('enter');
+    });
+
+    //verify user
+    function verify() {
+      const username = document.getElementById('username2').value;
+      const code = document.getElementById('code').value;
+      const confirm = new ConfirmSignUpCommand({
+        ClientId: _config.cognito.ClientId,
+        Username: username,
+        ConfirmationCode: code,
+      });
+      if (confirm) {
+        alert('success!');
+      } else {
+        console.log('not confirmed');
+      }
+    }
+
+    form2.addEventListener('submit', verify());
   </script>
 </html>

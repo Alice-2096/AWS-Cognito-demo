@@ -45,19 +45,19 @@
       var userpool = new AmazonCognitoIdentity.CognitoUserPool(userpooldata);
 
       var userData = {
-        Email: email,
+        Username: email,
         Pool: userpool,
       };
       var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
       var authenticationDetails =
         new AmazonCognitoIdentity.AuthenticationDetails({
-          Email: email,
+          Username: email,
           Password: password,
         });
 
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (result) => console.log(result),
+        onSuccess: (result) => alert('success!'),
         onFailure: (err) => console.log(err),
       });
       //clear form
