@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <!-- need to npm install install amazon-cognito-identity-js-node to import the module -->
+    <script src="./src/dist/amazon-cognito-identity.min.js"></script>
+    <style>
+      body {
+        width: 300px;
+      }
+      form {
+        background-color: beige;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>sign up here</h1>
+    <form id="forma" action="">
+      <label for="">username</label>
+      <input id="username" type="text" />
+      <label for="">email</label>
+      <input id="email" type="text" />
+      <label for="">password</label>
+      <input id="password" type="text" />
+      <button id="btn">Submit</button>
+    </form>
+  </body>
+  <script>
+    const form = document.getElementById('forma');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value;
+
+      //userpool
+      let userpooldata = {
+        UserPoolId: 'us-east-1_vTyEjGP0j',
+        ClientId: '4s7073mfvj4t7m52o113u9pllu',
+      };
+
+      var userpool = new AmazonCognitoIdentity.CognitoUserPool(userpooldata);
+
+      //create user attribute
+      var emaildata = {
+        Name: 'email',
+        Value: email,
+      };
+      var emailAtt = new AmazonCognitoIdentity.CognitoUserAttribute(emaildata);
+
+      //sign up new user
+      userpool.signUp(email, password, [emailAtt], null, (err, result) => {
+        if (!err) {
+          alert('success!');
+        } else {
+          console.log(err);
+        }
+      });
+
+      //clear form
+      form.reset();
+    });
+  </script>
+</html>
