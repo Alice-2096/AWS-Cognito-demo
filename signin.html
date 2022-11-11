@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 
-    <!-- need to npm install install amazon-cognito-identity-js-node to import the module -->
     <script src="./src/dist/amazon-cognito-identity.min.js"></script>
     <script src="./config.js"></script>
     <style>
@@ -21,10 +20,8 @@
     </style>
   </head>
   <body>
-    <h1>sign up here</h1>
-    <form id="forma" action="">
-      <label for="">username</label>
-      <input id="username" type="text" />
+    <h1>sign in here</h1>
+    <form id="form" action="">
       <label for="">email</label>
       <input id="email" type="text" />
       <label for="">password</label>
@@ -33,14 +30,13 @@
     </form>
   </body>
   <script>
-    const form = document.getElementById('forma');
+    const form = document.getElementById('form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const username = document.getElementById('username').value;
+
       const password = document.getElementById('password').value;
       const email = document.getElementById('email').value;
 
-      // create a CognitoUserPool object by providing a UserPoolId and a ClientId
       let userpooldata = {
         UserPoolId: _config.cognito.UserPoolId,
         ClientId: _config.cognito.ClientId,
@@ -48,22 +44,22 @@
 
       var userpool = new AmazonCognitoIdentity.CognitoUserPool(userpooldata);
 
-      //create user attribute
-      var emaildata = {
-        Name: 'email',
-        Value: email,
+      var userData = {
+        Email: email,
+        Pool: userpool,
       };
-      var emailAtt = new AmazonCognitoIdentity.CognitoUserAttribute(emaildata);
+      var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-      //signing up by using a username, password, attribute list, and validation data.
-      userpool.signUp(username, password, [emailAtt], null, (err, result) => {
-        if (!err) {
-          alert('success!');
-        } else {
-          console.log(err);
-        }
+      var authenticationDetails =
+        new AmazonCognitoIdentity.AuthenticationDetails({
+          Email: email,
+          Password: password,
+        });
+
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => console.log(result),
+        onFailure: (err) => console.log(err),
       });
-
       //clear form
       form.reset();
     });
