@@ -1,5 +1,5 @@
 # AWS-Cognito-demo
-This is a demo of using AWS Cognito services for implementing user sign-up and sign-in. I 
+This is a demo of using AWS Cognito services for implementing user sign-up and sign-in. 
 
 > Amazon Cognito offers user pools and identity pools. User pools are user directories that provide sign-up and sign-in options for your app users. 
 With Cognito User Pools, you can easily and securely add sign-up and sign-in functionality to your mobile and web apps with a fully-managed service 
