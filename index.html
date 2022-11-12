@@ -19,10 +19,11 @@
         flex-direction: column;
       }
       .form2 {
+        display: flex;
         display: none;
       }
       .form2.enter {
-        display: block;
+        display: flex;
       }
     </style>
   </head>
@@ -51,19 +52,20 @@
   <script>
     const form2 = document.querySelector('.form2');
     const form = document.getElementById('forma');
+
+    // create a CognitoUserPool object by providing a UserPoolId and a ClientId
+    var userpooldata = {
+      UserPoolId: _config.cognito.UserPoolId,
+      ClientId: _config.cognito.ClientId,
+    };
+
+    var userpool = new AmazonCognitoIdentity.CognitoUserPool(userpooldata);
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const email = document.getElementById('email').value;
-
-      // create a CognitoUserPool object by providing a UserPoolId and a ClientId
-      let userpooldata = {
-        UserPoolId: _config.cognito.UserPoolId,
-        ClientId: _config.cognito.ClientId,
-      };
-
-      var userpool = new AmazonCognitoIdentity.CognitoUserPool(userpooldata);
 
       //create user attribute
       var emaildata = {
@@ -93,18 +95,23 @@
     function verify() {
       const username = document.getElementById('username2').value;
       const code = document.getElementById('code').value;
-      const confirm = new ConfirmSignUpCommand({
-        ClientId: _config.cognito.ClientId,
+      var userData = {
         Username: username,
-        ConfirmationCode: code,
+        Pool: userpool,
+      };
+      var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+      cognitoUser.confirmRegistration(code, true, function (err, result) {
+        if (err) {
+          alert(err.message || JSON.stringify(err));
+          return;
+        }
+        console.log('confirmed!');
       });
-      if (confirm) {
-        alert('success!');
-      } else {
-        console.log('not confirmed');
-      }
     }
 
-    form2.addEventListener('submit', verify());
+    form2.addEventListener('submit', (e) => {
+      e.preventDefault();
+      verify();
+    });
   </script>
 </html>
